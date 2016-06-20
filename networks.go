@@ -1,5 +1,9 @@
 package ipv4
 
+import (
+	"net"
+)
+
 // IsIPv4 return true if input is a valid IPv4 address
 func IsIPv4(dots string) bool {
 	ip := net.ParseIP(dots)
@@ -21,25 +25,23 @@ func IsIPv4(dots string) bool {
 //
 func IsInternal(dots string) bool {
 	ip := net.ParseIP(dots)
-	if !ip {
+	if ip == nil {
 		return true
 	}
 	if ip4 := ip.To4(); ip4 != nil {
-		switch {
-		case ip4[0] == 127:
-			// loopback
+		if ip4[0] == 127 {
 			return true
-		case ip[0] == 10:
-			// private
+		}
+		if ip4[0] == 10 {
 			return true
-		case ip[0] == 192 && ip[1] == 168:
-			// private
+		}
+		if ip4[0] == 192 && ip4[1] == 168 {
 			return true
-		case ip[0] == 172 && ip[1] >= 16 && ip[1] < 32:
-			// private
+		}
+		if ip4[0] == 172 && ip4[1] >= 16 && ip4[1] < 32 {
 			return true
-		case ip[0] == 0 && ip[1] == 0 && ip[2] == 0 && ip[3] == 0:
-			// 0
+		}
+		if ip4[0] == 0 && ip4[1] == 0 && ip4[2] == 0 && ip4[3] == 0 {
 			return true
 		}
 	}
